@@ -1,0 +1,166 @@
+<!-- Section Produits -->
+<section id="products" class="products-section">
+    <h2>Nos Produits</h2>
+    <div class="product-grid">
+        <div class="product-card">
+            <img src="product1.jpg" alt="Boisson Saveur Tropicale">
+            <h3>Boisson Saveur Tropicale</h3>
+            <p>Prix : 2,99 €</p>
+            <button class="add-to-cart">Ajouter au panier</button>
+        </div>
+        <div class="product-card">
+            <img src="product2.jpg" alt="Boisson Énergisante Citron">
+            <h3>Boisson Énergisante Citron</h3>
+            <p>Prix : 3,49 €</p>
+            <button class="add-to-cart">Ajouter au panier</button>
+        </div>
+        <div class="product-card">
+            <img src="product3.jpg" alt="Boisson Ultra Boost">
+            <h3>Boisson Ultra Boost</h3>
+            <p>Prix : 4,49 €</p>
+            <button class="add-to-cart">Ajouter au panier</button>
+        </div>
+    </div>
+</section>
+/* Section Produits */
+.products-section {
+    padding: 50px 20px;
+    background-color: #1f1f2f;
+    text-align: center;
+}
+.products-section h2 {
+    font-size: 2.5em;
+    color: #e43f5a;
+    margin-bottom: 20px;
+}
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+.product-card {
+    background-color: #2a2a4a;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    transition: transform 0.3s;
+}
+.product-card:hover {
+    transform: translateY(-10px);
+}
+.product-card img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+.product-card h3 {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+.product-card p {
+    margin: 10px 0;
+}
+.add-to-cart {
+    background-color: #e43f5a;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+.add-to-cart:hover {
+    background-color: #e85d75;
+}
+// Gestion du panier
+const cart = [];
+
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const productCard = e.target.parentElement;
+        const productName = productCard.querySelector('h3').innerText;
+        const productPrice = productCard.querySelector('p').innerText.split(' ')[1];
+
+        const product = {
+            name: productName,
+            price: parseFloat(productPrice.replace(',', '.')),
+            quantity: 1
+        };
+
+        // Vérifie si le produit est déjà dans le panier
+        const existingProduct = cart.find(item => item.name === product.name);
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push(product);
+        }
+
+        console.log(cart);
+        alert(`${productName} a été ajouté au panier !`);
+    });
+});
+<section id="cart" class="cart-section">
+    <h2>Votre Panier</h2>
+    <div class="cart-items"></div>
+    <p class="total">Total : 0,00 €</p>
+    <button class="checkout">Passer à la caisse</button>
+</section>
+.cart-section {
+    padding: 30px;
+    background-color: #1f1f2f;
+    color: #fff;
+    text-align: center;
+}
+.cart-items {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #2a2a4a;
+    padding: 10px;
+    border-radius: 5px;
+}
+.total {
+    font-size: 1.5em;
+    margin: 20px 0;
+}
+.checkout {
+    background-color: #e43f5a;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+// Mise à jour du panier visuel
+function updateCart() {
+    const cartItems = document.querySelector('.cart-items');
+    const totalElement = document.querySelector('.total');
+
+    // Réinitialise l'affichage
+    cartItems.innerHTML = '';
+    let total = 0;
+
+    cart.forEach(product => {
+        const cartItem = document.createElement('div');
+        cartItem.classList.add('cart-item');
+        cartItem.innerHTML = `
+            <span>${product.name} (x${product.quantity})</span>
+            <span>${(product.price * product.quantity).toFixed(2)} €</span>
+        `;
+        cartItems.appendChild(cartItem);
+        total += product.price * product.quantity;
+    });
+
+    totalElement.innerText = `Total : ${total.toFixed(2)} €`;
+}
+
+// Met à jour le panier après chaque ajout
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', () => updateCart());
+});
